@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>قصتنا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Reem+Kufi:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#1a0b17;--bg2:#3a1230;--card:rgba(255,255,255,.07);--line:rgba(255,255,255,.14);--rose:#ff5c8a;--gold:#ffd29a;--txt:#fff4f7;--mut:#d9b8c6}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',system-ui,sans-serif;color:var(--txt);background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%,#240c26) fixed;min-height:100vh;overflow-x:hidden}
+.hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.hearts span{position:absolute;bottom:-40px;opacity:0;animation:rise linear infinite;color:var(--rose)}
+@keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.5}100%{transform:translateY(-110vh) scale(1.2);opacity:0}}
+main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 18px 120px}
+section{margin-top:44px}
+h2{font-family:'Reem Kufi','Cairo',sans-serif;font-size:26px;color:var(--gold);text-align:center;margin-bottom:18px}
+h2::after{content:"❤";display:block;font-size:14px;color:var(--rose);margin-top:4px}
+.hero{text-align:center;padding:70px 0 10px}
+.hero .small{color:var(--mut);letter-spacing:1px;font-size:15px}
+.names{font-family:'Reem Kufi','Cairo',sans-serif;font-size:clamp(40px,11vw,68px);line-height:1.2;margin:10px 0;background:linear-gradient(90deg,var(--gold),var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent}
+.names i{font-style:normal;-webkit-text-fill-color:var(--rose);margin:0 10px;display:inline-block;animation:beat 1.4s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}20%{transform:scale(1.25)}40%{transform:scale(1)}}
+.since{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;backdrop-filter:blur(8px)}
+.counter{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center}
+.counter div{background:rgba(255,255,255,.06);border-radius:16px;padding:14px 4px}
+.counter b{display:block;font-size:clamp(24px,7vw,38px);font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums}
+.counter small{color:var(--mut);font-size:13px}
+.total{text-align:center;margin-top:14px;color:var(--mut);font-size:14px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.ph{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;cursor:pointer;background:#000}
+.ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.ph:hover img{transform:scale(1.06)}
+.empty{text-align:center;color:var(--mut);padding:26px 10px;font-size:15px}
+video{width:100%;border-radius:18px;background:#000;max-height:70vh}
+.player{display:flex;align-items:center;gap:14px}
+.play{width:62px;height:62px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--rose),#ff8e6e);color:#fff;font-size:24px;cursor:pointer;flex:none;box-shadow:0 6px 24px rgba(255,92,138,.45)}
+.play:disabled{opacity:.4;cursor:default}
+.player .t{flex:1}
+.player .t b{display:block}
+.player .t small{color:var(--mut)}
+.bar{height:5px;background:var(--line);border-radius:5px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--rose)}
+.letter{background:linear-gradient(180deg,#fff8ef,#f6e6d4);color:#4a2a2a;border-radius:6px 22px 22px 22px;padding:28px 24px;line-height:2.1;font-size:18px;white-space:pre-wrap;box-shadow:0 14px 40px rgba(0,0,0,.35);position:relative}
+.letter::before{content:"💌";position:absolute;top:-16px;right:20px;font-size:30px}
+.notes{display:grid;gap:10px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;position:relative}
+.note small{color:var(--mut);display:block;margin-top:6px;font-size:12px}
+.note .x{position:absolute;left:10px;top:10px}
+.note .x.ed-edit{left:48px}
+.note>div{white-space:pre-wrap}
+footer{text-align:center;color:var(--mut);font-size:13px;margin-top:60px}
+/* edit mode */
+.ed{display:none}
+body.editing .ed{display:flex}
+.btn{border:1px solid var(--line);background:rgba(255,255,255,.1);color:var(--txt);border-radius:12px;padding:10px 16px;font:inherit;cursor:pointer;align-items:center;gap:6px}
+.btn.main{background:linear-gradient(135deg,var(--rose),#ff8e6e);border:0}
+.btn:disabled{opacity:.5;cursor:default}
+.x{width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;cursor:pointer;font-size:14px;display:none;align-items:center;justify-content:center}
+body.editing .x{display:flex}
+.ph .x{position:absolute;top:6px;left:6px}
+.row{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+input[type=text],input[type=date],input[type=password],input[type=tel],textarea{width:100%;background:rgba(255,255,255,.1);border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:10px 12px;font:inherit}
+textarea{min-height:200px;line-height:1.9;resize:vertical}
+.fab{position:fixed;bottom:18px;left:18px;z-index:20;width:54px;height:54px;border-radius:50%;border:0;background:var(--rose);color:#fff;font-size:22px;box-shadow:0 8px 26px rgba(0,0,0,.45);cursor:pointer}
+body.editing .fab{background:#2ecc8f}
+.set{display:grid;gap:10px;margin-bottom:10px}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:92vh;border-radius:12px}
+.lb>button{position:absolute;top:16px;right:16px;font-size:22px;background:none;border:0;color:#fff;cursor:pointer}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 18px;border-radius:30px;z-index:70;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+/* PIN dialog + full-page message */
+.modal{position:fixed;inset:0;background:rgba(10,3,10,.8);z-index:60;display:none;align-items:center;justify-content:center;padding:18px}
+.modal.on{display:flex}
+.modal .box{width:100%;max-width:340px;background:#2a0f26;border:1px solid var(--line);border-radius:22px;padding:24px;text-align:center}
+.modal h3{font-size:20px;color:var(--gold);margin-bottom:6px}
+.modal p{color:var(--mut);font-size:14px;margin-bottom:14px}
+.modal input{text-align:center;font-size:24px;letter-spacing:8px}
+.modal .err{color:#ff8a9c;font-size:13px;min-height:18px;margin-top:8px}
+#msg{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(160deg,var(--bg1),var(--bg2));font-size:18px;line-height:1.9}
+#msg.on{display:flex}
+</style>
+</head>
+<body>
+<div class="hearts" id="hearts"></div>
+<main id="app" style="visibility:hidden">
+  <header class="hero">
+    <div class="small">قصتنا</div>
+    <div class="names"><span id="n1"></span><i>❤</i><span id="n2"></span></div>
+    <div class="since" id="sinceTxt"></div>
+  </header>
+
+  <section class="ed-b" id="settings" style="display:none">
+    <div class="card">
+      <h2>Page Settings</h2>
+      <div class="set" dir="ltr">
+        <input type="text" id="in1" placeholder="First name" maxlength="60">
+        <input type="text" id="in2" placeholder="Second name" maxlength="60">
+        <label style="color:var(--mut)">Date your story started</label>
+        <input type="date" id="inDate">
+      </div>
+      <div class="row"><button class="btn main" id="saveSettingsBtn">Save</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Together For</h2>
+    <div class="card">
+      <div class="counter">
+        <div><b id="cD">0</b><small>Days</small></div>
+        <div><b id="cH">0</b><small>Hours</small></div>
+        <div><b id="cM">0</b><small>Minutes</small></div>
+        <div><b id="cS">0</b><small>Seconds</small></div>
+      </div>
+      <div class="total" id="cTotal"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>ذكرياتنا</h2>
+    <div class="card">
+      <div class="gallery" id="gallery"></div>
+      <div class="empty" id="galEmpty">لسه مفيش صور… ضيفوا أول ذكرى 📸</div>
+      <div class="row ed"><label class="btn main">＋ Add photos<input type="file" accept="image/*" multiple hidden id="phIn"></label></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>لحظة لا تتنسي</h2>
+    <div class="card">
+      <video id="vid" controls playsinline preload="metadata" style="display:none"></video>
+      <div class="empty" id="vidEmpty">ضيفوا فيديو يجمعكم 🎬</div>
+      <div class="row ed">
+        <label class="btn main">Choose video<input type="file" accept="video/*" hidden id="vidIn"></label>
+        <button class="btn" id="delVid">Delete video</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>أغنيتنا</h2>
+    <div class="card">
+      <div class="player">
+        <button class="play" id="play" disabled>▶</button>
+        <div class="t"><b id="songName"></b><small id="songHint"></small><div class="bar"><i id="prog"></i></div></div>
+      </div>
+      <audio id="aud" loop preload="none"></audio>
+      <div class="row ed">
+        <label class="btn main">Choose song<input type="file" accept="audio/*" hidden id="audIn"></label>
+        <button class="btn" id="delAud">Delete song</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>A Letter From the Heart</h2>
+    <div class="letter" id="letter" dir="ltr"></div>
+    <div class="ed-b" style="display:none;margin-top:12px">
+      <textarea id="letterIn" dir="ltr" placeholder="Write your letter here…" maxlength="5000"></textarea>
+      <div class="row"><button class="btn main" id="saveLetterBtn">Save letter</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>كلمات صغيرة</h2>
+    <div class="notes" id="notes"></div>
+    <div class="empty" id="noteEmpty">اكتبوا أول ملاحظة حلوة 💬</div>
+    <div class="ed-b" style="display:none;margin-top:12px">
+      <textarea id="noteIn" style="min-height:90px" placeholder="Write a note…" maxlength="1000"></textarea>
+      <div class="row"><button class="btn main" id="addNoteBtn">Add note</button></div>
+    </div>
+  </section>
+
+  <footer>صُنعت بحب ❤ zekra.store77</footer>
+</main>
+
+<button class="fab" id="fab" title="Edit page" style="display:none">✏️</button>
+<div class="lb" id="lb"><button id="lbClose">✕</button><img id="lbImg" alt=""></div>
+
+<div class="modal" id="pinModal">
+  <div class="box" dir="ltr">
+    <h3>Enter your PIN</h3>
+    <p>The PIN was given to you with your card.</p>
+    <input type="password" id="pinIn" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="••••••">
+    <div class="err" id="pinErr"></div>
+    <div class="row"><button class="btn main" id="pinOk">Unlock</button><button class="btn" id="pinCancel">Cancel</button></div>
+  </div>
+</div>
+
+<div id="msg"></div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const API = window.ZekraAPI;
+const MAX_FILE = 50 * 1024 * 1024;
+const defLetter = 'My love,\n\nSince the day I met you, the world has felt brighter. Every moment with you is a memory I treasure, and every day that passes I love you more.\n\nThank you for being by my side.\n\nAlways yours ❤';
+const id = new URLSearchParams(location.search).get('id');
+let story = null, pin = null, editing = false, busy = false;
+try { pin = sessionStorage.getItem('zk_pin_' + id); } catch (_) {}
+
+/* ---------- helpers ---------- */
+let toastTimer;
+function toast(m, ms) {
+  const t = $('toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(toastTimer); if (ms !== 0) toastTimer = setTimeout(() => t.classList.remove('on'), ms || 2200);
+}
+function fullMsg(html) { const m = $('msg'); m.innerHTML = html; m.classList.add('on'); $('app').style.visibility = 'hidden'; }
+const ERR = {
+  bad_pin: 'Wrong PIN, or too many attempts. Try again in 15 minutes.',
+  bad_path: 'Upload path was rejected.',
+  too_many_photos: 'You reached the maximum of 60 photos.',
+  too_many_notes: 'You reached the maximum number of notes.',
+  empty: 'Please write something first.'
+};
+
+/* ---------- loading ---------- */
+async function load() {
+  if (!API.configured()) return fullMsg('Backend not configured.<br><small>Fill in config.js first.</small>');
+  if (!id) return fullMsg('هذه الصفحة غير موجودة 💔<br><small>Open the link written on your card.</small>');
+  try {
+    story = await API.rpc('get_story', { p_id: id });
+  } catch (e) { return fullMsg('تعذر تحميل الصفحة<br><small>Check your connection and refresh.</small>'); }
+  if (!story) return fullMsg('هذه الصفحة غير موجودة 💔<br><small>This page was not found.</small>');
+  $('fab').style.display = 'block';
+  $('app').style.visibility = 'visible';
+  renderAll();
+  if (pin) { const ok = await verify(pin, true); if (ok) setEditing(true); }
+}
+async function reload() {
+  story = await API.rpc('get_story', { p_id: id });
+  renderAll();
+}
+
+/* ---------- rendering ---------- */
+function renderAll() { renderHead(); renderGallery(); renderMedia(); renderNotes(); tick(); }
+function renderHead() {
+  $('n1').textContent = story.name1; $('n2').textContent = story.name2;
+  const d = new Date(story.start_date + 'T00:00:00');
+  $('sinceTxt').textContent = 'من ' + d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.title = 'قصة ' + story.name1 + ' و' + story.name2;
+  $('letter').textContent = story.letter || defLetter;
+}
+function tick() {
+  if (!story) return;
+  const diff = Math.max(0, Date.now() - new Date(story.start_date + 'T00:00:00').getTime());
+  const s = Math.floor(diff / 1000), f = n => n.toLocaleString('en-US');
+  $('cD').textContent = f(Math.floor(s / 86400)); $('cH').textContent = f(Math.floor(s % 86400 / 3600));
+  $('cM').textContent = f(Math.floor(s % 3600 / 60)); $('cS').textContent = f(s % 60);
+  const days = Math.floor(s / 86400), y = Math.floor(days / 365), m = Math.floor(days % 365 / 30);
+  $('cTotal').textContent = days >= 30
+    ? `That's about ${y ? f(y) + (y > 1 ? ' years and ' : ' year and ') : ''}${f(m)} ${m === 1 ? 'month' : 'months'} of love` : '';
+}
+setInterval(tick, 1000);
+
+function renderGallery() {
+  const g = $('gallery'); g.innerHTML = '';
+  story.photos.forEach(p => {
+    const u = API.publicUrl(p.path);
+    const d = document.createElement('div'); d.className = 'ph';
+    const img = document.createElement('img'); img.src = u; img.alt = ''; img.loading = 'lazy';
+    img.onclick = () => { $('lbImg').src = u; $('lb').classList.add('on'); };
+    const x = document.createElement('button'); x.className = 'x'; x.textContent = '✕'; x.title = 'Delete';
+    x.onclick = e => { e.stopPropagation(); if (confirm('Delete this photo?')) write('delete_photo', { p_photo_id: p.id }, 'Photo deleted ✓'); };
+    d.append(img, x); g.appendChild(d);
+  });
+  $('galEmpty').style.display = story.photos.length ? 'none' : 'block';
+}
+
+let lastVid = null, lastSong = null;
+function renderMedia() {
+  const v = $('vid');
+  if (story.video_path) {
+    if (lastVid !== story.video_path) { v.src = API.publicUrl(story.video_path); lastVid = story.video_path; }
+    v.style.display = 'block'; $('vidEmpty').style.display = 'none';
+  } else { v.pause(); v.removeAttribute('src'); v.load(); lastVid = null; v.style.display = 'none'; $('vidEmpty').style.display = 'block'; }
+
+  const a = $('aud'), pl = $('play');
+  if (story.song_path) {
+    if (lastSong !== story.song_path) { a.src = API.publicUrl(story.song_path); lastSong = story.song_path; pl.textContent = '▶'; }
+    pl.disabled = false; $('songName').textContent = story.song_name || 'أغنيتنا'; $('songHint').textContent = 'اضغط للتشغيل';
+  } else {
+    a.pause(); a.removeAttribute('src'); lastSong = null; pl.textContent = '▶'; pl.disabled = true;
+    $('songName').textContent = 'لسه مفيش أغنية'; $('songHint').textContent = 'ضيفوا أغنيتكم من وضع التعديل';
+  }
+}
+
+function renderNotes() {
+  const n = $('notes'); n.innerHTML = '';
+  story.notes.slice().reverse().forEach(o => {
+    const d = document.createElement('div'); d.className = 'note';
+    const p = document.createElement('div'); p.textContent = o.body;
+    const s = document.createElement('small');
+    s.textContent = new Date(o.created_at).toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' });
+    const x = document.createElement('button'); x.className = 'x'; x.textContent = '✕'; x.title = 'Delete';
+    x.onclick = () => { if (confirm('Delete this note?')) write('delete_note', { p_note_id: o.id }, 'Note deleted ✓'); };
+    const e = document.createElement('button'); e.className = 'x ed-edit'; e.textContent = '✎'; e.title = 'Edit';
+    e.onclick = () => startNoteEdit(d, o);
+    d.append(x, e, p, s); n.appendChild(d);
+  });
+  $('noteEmpty').style.display = story.notes.length ? 'none' : 'block';
+}
+function startNoteEdit(card, o) {
+  card.innerHTML = '';
+  const t = document.createElement('textarea'); t.value = o.body; t.style.minHeight = '90px'; t.maxLength = 1000;
+  const r = document.createElement('div'); r.className = 'row';
+  const ok = document.createElement('button'); ok.className = 'btn main'; ok.textContent = 'Save';
+  const no = document.createElement('button'); no.className = 'btn'; no.textContent = 'Cancel';
+  ok.onclick = () => { const v = t.value.trim(); if (!v) return toast('Note cannot be empty'); write('update_note', { p_note_id: o.id, p_body: v }, 'Note updated ✓'); };
+  no.onclick = renderNotes;
+  r.append(ok, no); card.append(t, r); t.focus();
+}
+
+/* ---------- writing (every call carries the PIN) ---------- */
+async function write(fn, args, okMsg) {
+  if (!pin) { askPin(); return false; }
+  try {
+    const r = await API.rpc(fn, Object.assign({ p_id: id, p_pin: pin }, args));
+    if (!r || !r.ok) {
+      if (r && r.error === 'bad_pin') { forgetPin(); setEditing(false); }
+      toast(ERR[r && r.error] || 'Could not save, please try again.', 3500);
+      return false;
+    }
+    await reload();
+    if (okMsg) toast(okMsg);
+    return r;
+  } catch (e) { toast('Connection problem, please try again.', 3500); return false; }
+}
+
+/* ---------- PIN / edit mode ---------- */
+function forgetPin() { pin = null; try { sessionStorage.removeItem('zk_pin_' + id); } catch (_) {} }
+async function verify(p, silent) {
+  try {
+    const r = await API.rpc('verify_pin', { p_id: id, p_pin: p });
+    if (r && r.ok) { pin = p; try { sessionStorage.setItem('zk_pin_' + id, p); } catch (_) {} return true; }
+    if (!silent) $('pinErr').textContent = ERR.bad_pin;
+    forgetPin(); return false;
+  } catch (e) { if (!silent) $('pinErr').textContent = 'Connection problem, please try again.'; return false; }
+}
+function askPin() { $('pinErr').textContent = ''; $('pinIn').value = ''; $('pinModal').classList.add('on'); setTimeout(() => $('pinIn').focus(), 50); }
+$('pinCancel').onclick = () => $('pinModal').classList.remove('on');
+$('pinOk').onclick = async () => {
+  const v = $('pinIn').value.trim(); if (!v) return;
+  $('pinOk').disabled = true;
+  const ok = await verify(v);
+  $('pinOk').disabled = false;
+  if (ok) { $('pinModal').classList.remove('on'); setEditing(true); }
+};
+$('pinIn').onkeydown = e => { if (e.key === 'Enter') $('pinOk').click(); };
+
+function setEditing(on) {
+  editing = on;
+  document.body.classList.toggle('editing', on);
+  $('fab').textContent = on ? '✓' : '✏️';
+  document.querySelectorAll('.ed-b').forEach(e => e.style.display = on ? 'block' : 'none');
+  if (on) {
+    $('in1').value = story.name1; $('in2').value = story.name2; $('inDate').value = story.start_date;
+    $('letterIn').value = story.letter || defLetter;
+    $('settings').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+$('fab').onclick = () => { if (editing) setEditing(false); else if (pin) setEditing(true); else askPin(); };
+
+/* ---------- edit actions ---------- */
+$('saveSettingsBtn').onclick = () => write('save_settings', { p_name1: $('in1').value, p_name2: $('in2').value, p_start: $('inDate').value || null }, 'Saved ✓');
+$('saveLetterBtn').onclick = () => write('save_letter', { p_letter: $('letterIn').value }, 'Letter saved ✓');
+$('addNoteBtn').onclick = async () => {
+  const v = $('noteIn').value.trim(); if (!v) return;
+  if (await write('add_note', { p_body: v }, 'Note added ✓')) $('noteIn').value = '';
+};
+
+function rand() { return Math.random().toString(36).slice(2, 10); }
+function extOf(f, fallback) { const m = /\.([a-z0-9]{1,5})$/i.exec(f.name || ''); return m ? m[1].toLowerCase() : fallback; }
+
+async function compress(file) {
+  const bmp = await createImageBitmap(file);
+  const k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+  return new Promise(r => c.toBlob(r, 'image/jpeg', .85));
+}
+
+$('phIn').onchange = async e => {
+  const files = [...e.target.files]; e.target.value = '';
+  if (!files.length || busy) return; busy = true;
+  let done = 0, failed = 0;
+  for (const f of files) {
+    toast(`Uploading photo ${done + failed + 1} of ${files.length}…`, 0);
+    try {
+      const blob = await compress(f);
+      const path = `${id}/photos/${Date.now()}-${rand()}.jpg`;
+      await API.upload(path, blob);
+      const r = await API.rpc('add_photo', { p_id: id, p_pin: pin, p_path: path });
+      if (r && r.ok) done++; else { failed++; if (r && r.error === 'too_many_photos') { toast(ERR.too_many_photos, 3500); break; } if (r && r.error === 'bad_pin') { forgetPin(); setEditing(false); break; } }
+    } catch (_) { failed++; }
+  }
+  busy = false;
+  await reload().catch(() => {});
+  toast(failed ? `${done} added, ${failed} failed` : `${done} photo${done === 1 ? '' : 's'} added ✓`, 3000);
+};
+
+async function uploadMedia(file, kind) {
+  if (!file || busy) return;
+  if (file.size > MAX_FILE) return toast('File is larger than 50 MB. Please choose a smaller one.', 4000);
+  busy = true;
+  try {
+    const path = `${id}/${kind}/${Date.now()}-${rand()}.${extOf(file, kind === 'video' ? 'mp4' : 'mp3')}`;
+    await API.upload(path, file, p => toast(`Uploading… ${Math.round(p * 100)}%`, 0));
+    const name = (file.name || '').replace(/\.[^.]+$/, '');
+    const r = kind === 'video'
+      ? await API.rpc('set_video', { p_id: id, p_pin: pin, p_path: path })
+      : await API.rpc('set_song', { p_id: id, p_pin: pin, p_path: path, p_name: name });
+    if (r && r.ok) { await reload(); toast('Added ✓'); }
+    else { if (r && r.error === 'bad_pin') { forgetPin(); setEditing(false); } toast(ERR[r && r.error] || 'Could not save.', 3500); }
+  } catch (e) { toast('Upload failed. Check the file type and try again.', 4000); }
+  busy = false;
+}
+$('vidIn').onchange = e => { const f = e.target.files[0]; e.target.value = ''; uploadMedia(f, 'video'); };
+$('audIn').onchange = e => { const f = e.target.files[0]; e.target.value = ''; uploadMedia(f, 'audio'); };
+$('delVid').onclick = () => { if (confirm('Delete the video?')) write('set_video', { p_path: null }, 'Video deleted ✓'); };
+$('delAud').onclick = () => { if (confirm('Delete the song?')) write('set_song', { p_path: null, p_name: null }, 'Song deleted ✓'); };
+
+/* ---------- player / lightbox / hearts ---------- */
+$('play').onclick = () => { const a = $('aud'); if (a.paused) { a.play(); $('play').textContent = '❚❚'; } else { a.pause(); $('play').textContent = '▶'; } };
+$('aud').ontimeupdate = e => { const a = e.target; $('prog').style.width = (a.duration ? a.currentTime / a.duration * 100 : 0) + '%'; };
+$('lbClose').onclick = () => $('lb').classList.remove('on');
+$('lb').onclick = e => { if (e.target.id === 'lb') $('lb').classList.remove('on'); };
+(() => { const h = $('hearts'); for (let i = 0; i < 14; i++) { const s = document.createElement('span'); s.textContent = '❤';
+  s.style.left = Math.random() * 100 + '%'; s.style.fontSize = (10 + Math.random() * 18) + 'px';
+  s.style.animationDuration = (9 + Math.random() * 10) + 's'; s.style.animationDelay = (Math.random() * 12) + 's'; h.appendChild(s); } })();
+
+load();
+</script>
+</body>
+</html>
